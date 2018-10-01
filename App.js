@@ -11,19 +11,21 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 import ToDo from "./ToDo";
+import uuidv1 from "uuid/v1";
 
 const { width, height } = Dimensions.get("window");
 
 export default class App extends React.Component {
   state = {
     newToDo: null,
-    loadedToDos: false
+    loadedToDos: false,
+    toDos: {}
   };
   componentDidMount = () => {
     this._loadToDos();
   };
   render() {
-    const { newToDo, loadedToDos } = this.state;
+    const { newToDo, loadedToDos, toDos } = this.state;
     if (!loadedToDos) {
       return <AppLoading />;
     }
@@ -43,7 +45,10 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <ToDo text={"hello, "} />
+            {/* <ToDo text={"hello, "} /> */}
+            {Object.values(toDos).map(toDo => (
+              <ToDo key={toDo.id} {...toDo} deleteToDo={this._deleteToDo} />
+            ))}
           </ScrollView>
         </View>
       </View>
@@ -65,7 +70,40 @@ export default class App extends React.Component {
       this.setState({
         newToDo: ""
       });
+
+      this.setState(prevState => {
+        const ID = uuidv1();
+        //arrary로 관리하는 것보다 obj가 더 나음. 변경이 많아서...
+        const newToDoObj = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
+          }
+        };
+        const newState = {
+          ...prevState,
+          newToDo: "",
+          toDos: {
+            ...prevState.toDos,
+            ...newToDoObj
+          }
+        };
+        return { ...newState };
+      });
     }
+  };
+  _deleteToDo = id => {
+    this.setState(prevState => {
+      const toDos = prevState.toDos;
+      delete toDos[id];
+      const newState = {
+        ...prevState,
+        ...toDos
+      };
+      return { ...newState };
+    });
   };
 }
 
