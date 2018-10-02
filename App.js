@@ -47,7 +47,11 @@ export default class App extends React.Component {
           <ScrollView contentContainerStyle={styles.toDos}>
             {/* <ToDo text={"hello, "} /> */}
             {Object.values(toDos).map(toDo => (
-              <ToDo key={toDo.id} {...toDo} deleteToDo={this._deleteToDo} />
+              <ToDo key={toDo.id} {...toDo} 
+                deleteToDo={this._deleteToDo}
+                completeToDo={this._completedToDo}
+                unCompleteToDo={this._unCompletedToDo}
+                updateText={this._updateText} />
             ))}
           </ScrollView>
         </View>
@@ -105,6 +109,51 @@ export default class App extends React.Component {
       return { ...newState };
     });
   };
+  _unCompletedToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: false
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
+  _completedToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: true
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
+  _updateText = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            text
+          }
+        }
+      };
+      return { ...newState };
+    });
+  }
 }
 
 const styles = StyleSheet.create({
