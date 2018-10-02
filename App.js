@@ -46,6 +46,7 @@ export default class App extends React.Component {
             returnKeyType={"done"}
             autoCorrect={false}
             onSubmitEditing={this._addToDo}
+            underlineColorAndroid={"transparent"}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
             {/* <ToDo text={"hello, "} /> */}

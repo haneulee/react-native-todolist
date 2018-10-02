@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "co.haneulee.todoList"
+    },
+    "android": {
+      "package": "co.haneulee.todoList"
     }
   }
 }
